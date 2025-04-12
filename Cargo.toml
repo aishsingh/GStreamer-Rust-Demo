@@ -7,5 +7,7 @@ edition = "2021"
 
 [dependencies]
 gstreamer = "0.21"
-gstreamer-video = "0.21"
-opencv = "0.88"
+anyhow = "1.0"
+#gstreamer-video = "0.21"
+#gstreamer-app = "0.21"
+#opencv = { version = "0.88", features = ["highgui"] }
