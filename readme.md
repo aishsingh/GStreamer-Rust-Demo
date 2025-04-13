@@ -1,9 +1,8 @@
 # Demo
-This demo streams from my webcam and draws on each frame which is then output to the screen.
+This demo streams from my webcam, processes the format of each frame and displays this info as well as the original frame to the screen.
 
 The video pipelines follows the order shown below:
-
-[v4l2src] -> [videoconvert] -> [appsink] -> [appsrc] -> [videoconvert] -> [autovideosink] 
+[v4l2src] -> [videoconvert] -> [appsink] -> [appsrc] -> [videoconvert] -> [textoverlay] -> [autovideosink] 
 
 
 # Optimisations that are possible
@@ -25,6 +24,7 @@ While building this demo I took some notes along the way as I learnt more about 
 ### videoconvert element
 - Ensures video frames are received and sent in the format that is expected by other pipeline elements.
 - Best practice to include right after a source and right before a sink.
+- Setting the format in the cap does not guarantee videoconvert element will follow the specified format.
 
 ### autovideosink element
 - Used when you simply want to stream the video source without having access to each frame.
