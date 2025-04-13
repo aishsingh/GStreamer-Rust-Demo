@@ -1,6 +1,8 @@
 # Demo
 This demo streams from my webcam, processes the format of each frame and displays this info as well as the original frame to the screen.
 
+![Demo](Screencast.gif)
+
 The video pipelines follows the order shown below:
 [v4l2src] -> [videoconvert] -> [appsink] -> [appsrc] -> [videoconvert] -> [textoverlay] -> [autovideosink] 
 
@@ -8,7 +10,7 @@ The video pipelines follows the order shown below:
 # Optimisations that are possible
 - Create a seperate thread to handle the frame processing from data received in each callback from the input pipeline. This would avoid blocking the main GStreamer thread if processing was causing high latency. 
 - ensure no copying of buffers
-- adjust frame size and framerate to be minimum absolutely neccessary 
+- adjust frame size and framerate to be minimum absolutely neccessary.
 
 
 # My learnings
