@@ -2,7 +2,7 @@ use gstreamer as gst;
 use gstreamer::prelude::*;
 use anyhow::Result;
 
-// My webcam device on linux
+// My webcam device on linux which will be used as the video source
 const WEBCAM: &str = "/dev/video2";
 
 fn main() -> Result<()> {
