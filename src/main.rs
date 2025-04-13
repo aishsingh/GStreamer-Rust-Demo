@@ -1,6 +1,6 @@
 use gstreamer as gst;
 use gstreamer_app as gst_app;
-//use gstreamer_video as gst_video;
+use gstreamer_video as gst_video;
 use gstreamer::prelude::*;
 use anyhow::Result;
 
@@ -63,9 +63,8 @@ fn main() -> Result<()> {
                 // Copy buffer and do ML / drawing
                 let mut processed_buffer = buffer.copy(); 
 
-                // TODO Replace this with actual frame processing
-                //println!("Buffer size:   {}", buffer.size());
-                //println!("Expected size: {}", 640 * 480 * 3);
+                //let info = gst_video::VideoInfo::from_caps(sample.caps().unwrap()).unwrap();
+                //println!("Frame received! format: {:?}, size: {}x{}", info.format(), info.width(), info.height());
 
 
                 appsrc.push_buffer(processed_buffer).unwrap();
@@ -75,9 +74,26 @@ fn main() -> Result<()> {
     );
 
 
-    loop {
 
+    // Loop until EOS (end-of-stream) or error
+    // using the output pipeline only as it will end when the window is closed
+    // the input pipeline would not detect this change
+    let bus = output_pipeline.bus().unwrap();
+    for msg in bus.iter_timed(gst::ClockTime::NONE) {
+        match msg.view() {
+            gst::MessageView::Eos(..) => {
+                println!("Stream ended.");
+                break;
+            }
+            gst::MessageView::Error(err) => {
+                eprintln!("Error: {}", err.error());
+                break;
+            }
+            _ => {}
+        }
     }
+
+
 
 
     // Clean up

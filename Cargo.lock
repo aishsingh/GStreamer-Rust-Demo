@@ -275,6 +275,7 @@ dependencies = [
  "anyhow",
  "gstreamer",
  "gstreamer-app",
+ "gstreamer-video",
 ]
 
 [[package]]
@@ -285,6 +286,36 @@ checksum = "564cda782b3e6eed1b81cb4798a06794db56440fb05b422505be689f34ce3bc4"
 dependencies = [
  "glib-sys",
  "gobject-sys",
+ "libc",
+ "system-deps",
+]
+
+[[package]]
+name = "gstreamer-video"
+version = "0.21.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e85b2a4d1d3b7a98ae03806c3ed5c2db89d6b37a5f138780b48de015d68715e5"
+dependencies = [
+ "cfg-if",
+ "futures-channel",
+ "glib",
+ "gstreamer",
+ "gstreamer-base",
+ "gstreamer-video-sys",
+ "libc",
+ "thiserror",
+]
+
+[[package]]
+name = "gstreamer-video-sys"
+version = "0.21.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0302318d98e6b054501e485b6bb4ee20225823218f4a8660c182f115a33b16ee"
+dependencies = [
+ "glib-sys",
+ "gobject-sys",
+ "gstreamer-base-sys",
+ "gstreamer-sys",
  "libc",
  "system-deps",
 ]
