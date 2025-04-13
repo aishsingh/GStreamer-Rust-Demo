@@ -1,9 +1,9 @@
 # Demo
-This demo streams from my webcam, processes the format of each frame and displays this info as well as the original frame to the screen.
+This demo streams from my webcam, processes the format of each frame and the frame count and displays this info back on to the screen.
 
 ![Demo](Screencast.gif)
 
-The video pipelines follows the order shown below:
+The video pipelines follows the order shown below:  
 [v4l2src] -> [videoconvert] -> [appsink] -> [appsrc] -> [videoconvert] -> [textoverlay] -> [autovideosink] 
 
 
