@@ -25,7 +25,7 @@ fn main() -> Result<()> {
 
 
     // GStreamer output pipeline to push webcam frames to the sink
-    let output_pipeline = gst::parse_launch("appsrc name=source ! videoconvert ! autovideosink")?
+    let output_pipeline = gst::parse_launch("appsrc name=source ! videoconvert ! textoverlay name=overlay ! autovideosink")?
         .downcast::<gst::Bin>()
         .expect("Pipeline should be a gst::Bin");
 
@@ -34,6 +34,14 @@ fn main() -> Result<()> {
     .expect("appsrc not found")
     .downcast::<gst_app::AppSrc>()
     .expect("Element is expected to be an AppSrc");
+
+
+    // Configure text overlay
+    let overlay = output_pipeline
+    .by_name("overlay")
+    .unwrap();
+
+    overlay.set_property("font-desc", "Monospace, 12");
 
 
     // Start playing the pipelines
@@ -52,6 +60,8 @@ fn main() -> Result<()> {
         .build();
     appsrc.set_caps(Some(&caps));
 
+    let mut frame_count = 0;
+
 
     // Implement callbacks to access frame by frame data
     appsink.set_callbacks(
@@ -61,10 +71,12 @@ fn main() -> Result<()> {
                 let buffer = sample.buffer().unwrap();
 
                 // Copy buffer and do ML / drawing
-                let mut processed_buffer = buffer.copy(); 
+                let mut processed_buffer = buffer.copy_deep().unwrap();
 
-                //let info = gst_video::VideoInfo::from_caps(sample.caps().unwrap()).unwrap();
-                //println!("Frame received! format: {:?}, size: {}x{}", info.format(), info.width(), info.height());
+                // Update text overlay
+                let info = gst_video::VideoInfo::from_caps(sample.caps().unwrap()).unwrap();
+                frame_count += 1;
+                overlay.set_property("text", format!("format: {}, size: {}x{}, frame: {}", info.format(), info.width(), info.height(), frame_count));
 
 
                 appsrc.push_buffer(processed_buffer).unwrap();
