@@ -1,3 +1,14 @@
+/*
+
+------------------------------------------------------------
+ GStreamer Rust Demo
+------------------------------------------------------------
+   
+  Author  : Aishwarya Singh
+  Contact : contact@aishsingh.com
+
+*/
+
 use gstreamer as gst;
 use gstreamer::prelude::*;
 
@@ -12,7 +23,7 @@ use anyhow::Result;
 const WEBCAM: &str = "/dev/video2";
 
 fn main() -> Result<()> {
-    println!("GStreamer Rust Demo - Aishwarya Singh");
+    println!("GStreamer Rust Demo");
     println!("Initializing GStreamer...");
     gst::init()?;
 
