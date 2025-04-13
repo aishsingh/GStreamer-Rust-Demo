@@ -1,4 +1,6 @@
 use gstreamer as gst;
+use gstreamer_app as gst_app;
+//use gstreamer_video as gst_video;
 use gstreamer::prelude::*;
 use anyhow::Result;
 
@@ -13,7 +15,9 @@ fn main() -> Result<()> {
 
 
     // GStreamer input pipeline to access webcam frames from the source
-    let input_pipeline = gst::parse_launch(&format!("v4l2src device={} ! videoconvert ! video/x-raw,format=BGR ! appsink name=sink", WEBCAM)).unwrap();
+    let input_pipeline = gst::parse_launch(&format!("v4l2src device={} ! videoconvert ! video/x-raw,format=BGR,width=640,height=480 ! appsink name=sink", WEBCAM))?
+        .downcast::<gst::Bin>()
+        .expect("Pipeline should be a gst::Bin");
 
     let appsink = input_pipeline
     .by_name("sink").unwrap()
@@ -21,11 +25,15 @@ fn main() -> Result<()> {
 
 
     // GStreamer output pipeline to push webcam frames to the sink
-    let output_pipeline = gst::parse_launch("appsrc name=source ! videoconvert ! autovideosink").unwrap();
+    let output_pipeline = gst::parse_launch("appsrc name=source ! videoconvert ! autovideosink")?
+        .downcast::<gst::Bin>()
+        .expect("Pipeline should be a gst::Bin");
 
     let appsrc = output_pipeline
-    .by_name("source").unwrap()
-    .downcast::<gst_app::AppSrc>().unwrap();
+    .by_name("source")
+    .expect("appsrc not found")
+    .downcast::<gst_app::AppSrc>()
+    .expect("Element is expected to be an AppSrc");
 
 
     // Start playing the pipelines
@@ -54,13 +62,22 @@ fn main() -> Result<()> {
 
                 // Copy buffer and do ML / drawing
                 let mut processed_buffer = buffer.copy(); 
-                // ⬆️ Replace this with actual frame processing
+
+                // TODO Replace this with actual frame processing
+                //println!("Buffer size:   {}", buffer.size());
+                //println!("Expected size: {}", 640 * 480 * 3);
+
 
                 appsrc.push_buffer(processed_buffer).unwrap();
                 Ok(gst::FlowSuccess::Ok)
             })
             .build(),
     );
+
+
+    loop {
+
+    }
 
 
     // Clean up
