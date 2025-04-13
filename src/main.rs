@@ -2,14 +2,20 @@ use gstreamer as gst;
 use gstreamer::prelude::*;
 use anyhow::Result;
 
+// My webcam device on linux
+const WEBCAM: &str = "/dev/video2";
+
 fn main() -> Result<()> {
+    
+    println!("GStreamer Rust DEMO - Aishwarya Singh");
+
+
     // Initialize GStreamer
     gst::init()?;
 
-    // Create a simple GStreamer pipeline to display webcam feed
-    // /dev/video2 is my webcam
+    // Create a GStreamer pipeline to display webcam feed
     let pipeline = gst::parse_launch(
-        "v4l2src device=/dev/video2 ! videoconvert ! autovideosink"
+        format!("v4l2src device={} ! videoconvert ! autovideosink", WEBCAM).as_str()
     )?;
 
     // Start playing the pipeline
